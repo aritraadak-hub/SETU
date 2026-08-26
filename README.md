@@ -4,7 +4,7 @@
 
 **Team: 4 Loops**
 - Arpan Biswas
-- Ayana Kumar Mondal
+- Ayan Kumar Mondal
 - Aritra Pal
 - Aritra Adak
 
