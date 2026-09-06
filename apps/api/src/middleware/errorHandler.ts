@@ -14,6 +14,14 @@ export function errorHandler(
     });
   }
 
+  const statusCode = (err as any).statusCode || (err as any).status || 500;
+  if (statusCode < 500) {
+    return res.status(statusCode).json({
+      success: false,
+      error: err.message || 'Bad Request'
+    });
+  }
+
   console.error('Unhandled Server Error:', err);
   return res.status(500).json({
     success: false,
