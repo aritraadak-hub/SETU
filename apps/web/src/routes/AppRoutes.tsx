@@ -18,6 +18,7 @@ import { OfferingsListingPage } from '../pages/offerings/OfferingsListingPage';
 import { OfferingDetailPage } from '../pages/offerings/OfferingDetailPage';
 import { AccountPage } from '../pages/tourist/AccountPage';
 import { VendorDashboardPage } from '../pages/vendor/VendorDashboardPage';
+import { LocalVendorDashboardPage } from '../pages/vendor/LocalVendorDashboardPage';
 import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 
@@ -70,6 +71,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/vendor/notifications" element={<VendorNotificationsPage />} />
       <Route path="/vendor/messages" element={<VendorMessagesPage />} />
       <Route path="/vendor/storefront-preview" element={<VendorStorefrontPage isPreview={true} />} />
+      <Route path="/vendor/local-dashboard" element={<LocalVendorDashboardPage />} />
       <Route path="/vendor/*" element={<VendorDashboardPage />} />
 
       {/* Admin Management */}

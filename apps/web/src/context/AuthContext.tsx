@@ -22,8 +22,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await api.get('/auth/me');
       if (res.data.success) {
         setUser(res.data.user);
+      } else {
+        setUser(null);
       }
     } catch {
+      localStorage.removeItem('setu_token');
       setUser(null);
     } finally {
       setLoading(false);
@@ -35,27 +38,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (credentials: any) => {
-    const res = await api.post('/auth/login', credentials);
-    if (res.data.success) {
-      setUser(res.data.user);
-      return res.data.user;
+    try {
+      const res = await api.post('/auth/login', credentials);
+      if (res.data.success) {
+        if (res.data.token) {
+          localStorage.setItem('setu_token', res.data.token);
+        }
+        setUser(res.data.user);
+        return res.data.user;
+      }
+      throw new Error(res.data.error || 'Login failed');
+    } catch (err: any) {
+      const message = err.response?.data?.error || err.response?.data?.message || err.message || 'Login failed';
+      throw new Error(message);
     }
-    throw new Error(res.data.error || 'Login failed');
   };
 
   const register = async (data: any) => {
-    const res = await api.post('/auth/register', data);
-    if (res.data.success) {
-      setUser(res.data.user);
-      return res.data.user;
+    try {
+      const res = await api.post('/auth/register', data);
+      if (res.data.success) {
+        if (res.data.token) {
+          localStorage.setItem('setu_token', res.data.token);
+        }
+        setUser(res.data.user);
+        return res.data.user;
+      }
+      throw new Error(res.data.error || 'Registration failed');
+    } catch (err: any) {
+      const message = err.response?.data?.error || err.response?.data?.message || err.message || 'Registration failed';
+      throw new Error(message);
     }
-    throw new Error(res.data.error || 'Registration failed');
   };
 
   const logout = async () => {
     try {
       await api.post('/auth/logout');
+    } catch {
+      // Ignore network errors during logout
     } finally {
+      localStorage.removeItem('setu_token');
       setUser(null);
     }
   };

@@ -11,21 +11,26 @@ import { AppRoutes } from './routes/AppRoutes';
 import { EntryWelcomePage } from './pages/auth/EntryWelcomePage';
 
 const AppContent: React.FC = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [entryDone, setEntryDone] = useState<boolean>(
     () => localStorage.getItem('setu_entry_completed') === 'true'
   );
   const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
   const location = useLocation();
 
-  const isEntered = entryDone || !!user;
+  const pathname = location.pathname;
+  const isAuthRoute = pathname === '/login' || pathname === '/register';
+  const isBypassRoute = isAuthRoute || pathname.startsWith('/admin') || pathname.startsWith('/welcome');
+
+  const isEntered = entryDone || !!user || isBypassRoute;
+
+  if (loading) {
+    return null;
+  }
 
   if (!isEntered) {
     return <EntryWelcomePage onCompleteEntry={() => setEntryDone(true)} />;
   }
-
-  const pathname = location.pathname;
-  const isAuthRoute = pathname === '/login' || pathname === '/register';
 
   let bgImage = '/tourist.jpeg';
   if (pathname.startsWith('/vendor')) {

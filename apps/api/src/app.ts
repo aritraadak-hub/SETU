@@ -27,7 +27,9 @@ app.use(cors({
   origin: (origin, callback) => {
     callback(null, true);
   },
-  credentials: true
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 }));
 
 app.use(express.json());

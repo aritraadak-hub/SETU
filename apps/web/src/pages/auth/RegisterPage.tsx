@@ -26,6 +26,7 @@ export const RegisterPage: React.FC = () => {
   const [businessName, setBusinessName] = useState('');
   const [businessType, setBusinessType] = useState('Tour Operator');
   const [registeredUser, setRegisteredUser] = useState<User | null>(null);
+  const registeredUserRef = React.useRef<User | null>(null);
 
   const [loading, setLoading] = useState(false);
   const [showSuccessAnim, setShowSuccessAnim] = useState(false);
@@ -53,6 +54,7 @@ export const RegisterPage: React.FC = () => {
         businessType: role === 'VENDOR' ? businessType : undefined
       });
 
+      registeredUserRef.current = newUser;
       setRegisteredUser(newUser);
       localStorage.setItem('setu_entry_completed', 'true');
       showToast(`Account created successfully as ${role}!`, 'success');
@@ -70,7 +72,8 @@ export const RegisterPage: React.FC = () => {
         brandText={role === 'VENDOR' ? 'ACCOUNT CREATED. AWAITING ADMIN APPROVAL...' : 'ACCOUNT CREATED. WELCOME TO SETU!'}
         onComplete={() => {
           localStorage.setItem('setu_entry_completed', 'true');
-          navigate(getHomeRouteForRole(registeredUser));
+          const finalUser = registeredUserRef.current || registeredUser;
+          navigate(getHomeRouteForRole(finalUser));
         }}
       />
     );

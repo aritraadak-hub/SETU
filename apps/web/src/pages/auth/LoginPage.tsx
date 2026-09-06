@@ -21,6 +21,7 @@ export const LoginPage: React.FC = () => {
   const [showSuccessAnim, setShowSuccessAnim] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [loggedInUser, setLoggedInUser] = useState<any>(null);
+  const loggedInUserRef = React.useRef<any>(null);
 
   const redirectUrl = searchParams.get('redirect') || '/';
 
@@ -31,6 +32,7 @@ export const LoginPage: React.FC = () => {
 
     try {
       const user = await login({ email, password });
+      loggedInUserRef.current = user;
       setLoggedInUser(user);
       localStorage.setItem('setu_entry_completed', 'true');
       showToast(`Welcome back, ${user.name}!`, 'success');
@@ -48,7 +50,8 @@ export const LoginPage: React.FC = () => {
         brandText="AUTHENTICATING SESSION & PREPARING DASHBOARD..."
         onComplete={() => {
           localStorage.setItem('setu_entry_completed', 'true');
-          const target = redirectUrl && redirectUrl !== '/' ? redirectUrl : getHomeRouteForRole(loggedInUser);
+          const finalUser = loggedInUserRef.current || loggedInUser;
+          const target = redirectUrl && redirectUrl !== '/' ? redirectUrl : getHomeRouteForRole(finalUser);
           navigate(target);
         }}
       />
