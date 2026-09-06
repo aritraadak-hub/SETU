@@ -10,5 +10,15 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": [
+    "src/find_images.ts",
+    "src/inspect_images.ts",
+    "src/check_db_emails.ts",
+    "src/list_db_users.ts",
+    "src/copy_all_images.ts",
+    "src/sync_seed_images.ts",
+    "src/update_all_database_images.ts",
+    "src/update_seed_file.ts"
+  ]
 }

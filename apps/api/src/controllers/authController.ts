@@ -69,14 +69,15 @@ export async function register(req: Request, res: Response, next: NextFunction) 
     const token = signToken({
       userId: user.id,
       role: user.role,
-      email: user.email
+      email: user.email,
+      name: user.name
     });
 
     res.cookie('setu_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: 'lax'
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
     });
 
     return res.status(201).json({
@@ -121,14 +122,15 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     const token = signToken({
       userId: user.id,
       role: user.role,
-      email: user.email
+      email: user.email,
+      name: user.name
     });
 
     res.cookie('setu_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: 'lax'
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
     });
 
     return res.json({
@@ -158,7 +160,11 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function logout(req: Request, res: Response) {
-  res.clearCookie('setu_token');
+  res.clearCookie('setu_token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+  });
   return res.json({ success: true, message: 'Logged out successfully' });
 }
 
