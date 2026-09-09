@@ -23,13 +23,13 @@ app.use(helmet({
   contentSecurityPolicy: false
 }));
 
+const frontendUrl = (process.env.FRONTEND_URL || env.FRONTEND_URL || '').replace(/\/+$/, '');
+
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   'http://localhost:5000',
-  'https://setu-bihar-tourism-and-marketplace.onrender.com',
-  env.FRONTEND_URL,
-  process.env.FRONTEND_URL
+  frontendUrl
 ].filter(Boolean) as string[];
 
 const corsOptions: cors.CorsOptions = {
@@ -37,16 +37,19 @@ const corsOptions: cors.CorsOptions = {
     // Allow requests with no origin (e.g. mobile apps, curl, uptime/health checks)
     if (!origin) return callback(null, true);
 
+    const normalizedOrigin = origin.replace(/\/+$/, '');
+
     if (
-      allowedOrigins.includes(origin) ||
-      origin.endsWith('.onrender.com') ||
-      origin.includes('localhost') ||
-      origin.includes('127.0.0.1')
+      allowedOrigins.includes(normalizedOrigin) ||
+      (frontendUrl && normalizedOrigin === frontendUrl) ||
+      normalizedOrigin.endsWith('.onrender.com') ||
+      normalizedOrigin.includes('localhost') ||
+      normalizedOrigin.includes('127.0.0.1')
     ) {
       return callback(null, true);
     }
 
-    return callback(null, true);
+    return callback(new Error(`CORS policy: origin ${origin} is not allowed`), false);
   },
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
