@@ -1,9 +1,7 @@
 import dotenv from 'dotenv';
-import path from 'path';
 
-// Load .env from cwd or root directory if available
+// Load .env from current working directory if available
 dotenv.config();
-dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
 if (!process.env.DATABASE_URL) {
   process.env.DATABASE_URL = 'file:./dev.db';
 }
